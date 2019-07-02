@@ -1,0 +1,70 @@
+<% include layout.ejs %>
+<link rel="stylesheet" href="css/adminhome.css">
+<section class="services-area pt-100 pb-70" id="services">
+  <div class="container">
+      <div class="row">
+          <div class="col-xl-8 mx-auto text-center">
+              <div class="section-title">
+                  <h4>Welcome Admin</h4>
+                  
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-lg-4 col-md-6">
+              
+              <div class="single-service" onclick="goToPage('')">
+                  <i class="fa fa-user"></i>
+                  <h4>Manage Users</h4>
+              </div>
+              
+              
+          </div>
+          <div class="col-lg-4 col-md-6">
+              <div class="single-service" onclick="goToPage('')">
+                  <i class="fa fa-newspaper-o"></i>
+                  <h4>Manage Loans</h4>
+                  
+              </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+              <div class="single-service" onclick="goToPage('')">
+                  <i class="fa fa-user-plus"></i>
+                  <h4>View Application</h4>
+                  
+              </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+              <div class="single-service" onclick="goToPage('')">
+                  <i class="fa fa-check"></i>
+                  <h4>Approved Applications</h4>
+                  <h5></h5>
+              </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+              <div class="single-service" onclick="goToPage('')">
+                  <i class="fa fa-times-circle"></i>
+                  <h4>Rejected Applications</h4>
+                  <h5></h5>
+              </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="single-service" onclick="goToPage('')">
+                <i class="fa fa-pencil-square"></i>
+                <h4>Total Applications</h4>
+                <h5></h5>
+            </div>
+        </div>
+          
+      </div>
+  </div>
+</section>
+      <% include footer.ejs %>
+      <style>
+        a.btn.btn-primary.waves-effect.waves-light {
+          background: #008f95 !important;
+          border: none;
+      }
+      </style>
+    </body>
+    </html>
