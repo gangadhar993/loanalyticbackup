@@ -1,12 +1,18 @@
 (function() {
-    
-    window.addEventListener('load', function() {
+    $('#spinner').hide();
+    window.onload = (event) => {
+      $('#password-failed').hide();
+      $('#password-success').hide();
+      $('#date-failed').hide();
+      validate();
+    };
+   /* window.addEventListener('load', function() {
       // Fetch all the forms we want to apply custom Bootstrap validation styles to
       $('#password-failed').hide();
       $('#password-success').hide();
       $('#date-failed').hide();
       validate();
-    }, false);
+    }, false);*/
    
   })();
 
@@ -30,11 +36,32 @@
 
     return [year, month, day].join('-');
 }
-  var app = angular.module('myApp', []);
+
+let crypto = (function(){
+  return{
+    encryptMessage: function(messageToencrypt){
+      var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, "password");
+      console.log(encryptedMessage);
+      return encryptedMessage.toString();
+    },
+    decryptMessage: function(encryptedMessage){
+      var decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, "password");
+      var decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+      return decryptedMessage;
+    }
+  }
+})();
+
+var app = angular.module('myApp', ['ngSanitize']);
+app.controller('navController',function($scope){
+    $scope.isVisible = false;
+});
   app.controller('formCtrl', function($scope,$http) {
     $scope.user = {
       firstName: "", 
       lastName: "",
+      gender:"",
       phone:"",
       email:"",
       dateofbirth:"",
@@ -42,6 +69,7 @@
       employeestatus:"",
       password:"",
       confirmpassword:"",
+      isactivated:"N"
     };
     $scope.reset = function() {
      
@@ -89,10 +117,12 @@
       }
     }
     $scope.submitForm = function(event){
+      $('#spinner').show();
       var form = $('#userRegsitration')[0];
       if (form.checkValidity() === false) {
         event.preventDefault();
         event.stopPropagation();
+        $('#spinner').hide();
       }
       form.classList.add('was-validated'); 
       if($scope.user.password != "" && $scope.user.confirmpassword != ""){
@@ -103,6 +133,7 @@
         else{
           $('#password-success').hide();
           $('#password-failed').show();
+          $('#spinner').hide();
           return;
         }
       }
@@ -118,12 +149,15 @@
       var data = $scope.user;
       data.dateofbirth = formatDate($scope.user.dateofbirth);
       data.ssn = parseInt($scope.user.ssn);
+      data.password = crypto.encryptMessage(data.password);
         $http.post('http://localhost:3000/register/createuser', data, config).then(function (response) {
           // This function handles succes
           console.log(response); 
           var data = {
-            "subject": "User Registration",
-            "text": '<img src="cid:unique@kreata.ee" width="600px" height="500px" /> <br><h1 style="color:#008f95;">Welcome to Loanalytic</h1>',
+            "subject": "Email Verification",
+            "text": '<img src="cid:unique@kreata.ee" width="600px" height="500px" />' +
+            '<br><h1 style="color:#008f95;">Welcome to Loanalytic</h1>'+
+            '<br><a href="http://localhost:3000/register/activateUser/'+$scope.user.email+'"'+' style="font-size:40px;">Click here to confirm your email</a>',
             "email": $scope.user.email,
             "src":"register.png"
         }
@@ -131,17 +165,18 @@
             // This function handles succes
             console.log(response);
             if(response.status == 200 && response.statusText == "OK"){
+              $('#spinner').hide();
               $('#registerModal').modal('show');
             }
             
         }, function(response) {
-
+          $('#spinner').hide();
             // this function handles error
             console.log(response);
         });
           
           }, function (response) {
-          
+            $('#spinner').hide();
           // this function handles error
           console.log(response);
           });
